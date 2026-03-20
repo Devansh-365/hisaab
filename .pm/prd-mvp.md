@@ -1,6 +1,6 @@
-# Khaata — MVP Product Requirements Document
+# Hisaab — MVP Product Requirements Document
 
-**Project:** Khaata (Open Source Trading Journal for Indian Traders)
+**Project:** Hisaab (Open Source Trading Journal for Indian Traders)
 **Author:** Devansh Tiwari
 **Date:** 2026-03-20
 **Status:** Draft
@@ -26,7 +26,7 @@ An **open-source, zero-auth, browser-only** trading journal that gives Indian tr
 **Strategic role:** Acts as the top-of-funnel for Metis. Traders who discover their patterns here get a natural bridge to Metis's AI-powered stock analysis for improving their decisions.
 
 ```
-Khaata (free, open source)          Metis (paid, AI analysis)
+Hisaab (free, open source)          Metis (paid, AI analysis)
 ─────────────────────────          ──────────────────────────
 "See what you did wrong"    →→→    "Make better decisions next time"
 Post-trade analysis                Pre-trade intelligence
@@ -259,7 +259,7 @@ interface MatchedTrade {
 **P3.4 — Export & Sharing**
 - Export matched trades as CSV
 - Export P&L report as PDF (basic)
-- "Share your stats" card (image) — watermarked "Powered by Khaata"
+- "Share your stats" card (image) — watermarked "Powered by Hisaab"
 - JSON export/import for backup and portability
 
 **P3.5 — Multi-Broker Support Expansion**
@@ -278,7 +278,7 @@ interface MatchedTrade {
 ---
 
 ### Phase 4: "The Bridge" — Metis Integration & AI Nudges
-> **Goal:** Create the natural upgrade path from Khaata → Metis.
+> **Goal:** Create the natural upgrade path from Hisaab → Metis.
 
 #### Features
 
@@ -294,7 +294,7 @@ interface MatchedTrade {
 - After showing a losing trade pattern: "Want AI analysis on [SYMBOL] before your next trade? Try Metis →"
 - On dashboard: subtle "Powered by Metis" badge
 - In README: "Get AI-powered stock analysis with Metis Cloud"
-- Share card watermark: "khaata.dev | Powered by Metis"
+- Share card watermark: "hisaab.dev | Powered by Metis"
 - Contextual, non-intrusive — only at natural upgrade moments
 
 **P4.3 — Tax Report Generation**
@@ -337,7 +337,7 @@ interface MatchedTrade {
 
 ## 8. Competitive Differentiation
 
-| Feature | Khaata | TradesViz | Zerodha Console | Google Sheets |
+| Feature | Hisaab | TradesViz | Zerodha Console | Google Sheets |
 |---------|--------|-----------|-----------------|---------------|
 | **Price** | Free forever | Free/$20-29/mo | Free (Zerodha only) | Free |
 | **Signup required** | No | Yes | Yes (Zerodha account) | Yes (Google) |
@@ -374,7 +374,7 @@ interface MatchedTrade {
 
 ### Phase 4 (Funnel)
 - 10% click-through on Metis CTAs
-- 5% conversion from Khaata user → Metis signup
+- 5% conversion from Hisaab user → Metis signup
 - Product Hunt launch (Top 5 of the day target)
 
 ---
@@ -397,7 +397,7 @@ License:       MIT
 ## 11. Folder Structure (Proposed)
 
 ```
-khaata/
+hisaab/
 ├── app/
 │   ├── layout.tsx              # Root layout
 │   ├── page.tsx                # Upload/drop zone (entry point)
@@ -468,7 +468,7 @@ khaata/
 |------|--------|-----------|
 | Broker changes CSV format | Parsing breaks | Version parsers, test against real files, community reports |
 | IndexedDB storage limits | Data loss for heavy traders | Warn at 80% capacity, offer JSON export |
-| Cannibalize Metis signups | Strategic misalignment | Clear separation: Khaata = backward-looking, Metis = forward-looking AI |
+| Cannibalize Metis signups | Strategic misalignment | Clear separation: Hisaab = backward-looking, Metis = forward-looking AI |
 | Low GitHub traction | No funnel value | README-first development, demo GIF, launch strategy |
 | FIFO matching bugs | Wrong P&L → trust destroyed | Extensive test suite against known broker outputs |
 | SEBI regulatory changes | Tax calculations outdated | Version tax rates, document FY applicability |
@@ -488,7 +488,7 @@ khaata/
 ## 14. Relationship to Metis
 
 ```
-                     Khaata (This Project)
+                     Hisaab (This Project)
                      ─────────────────────
                      "What happened?"
                      Post-trade analysis
@@ -507,7 +507,7 @@ khaata/
 ```
 
 The funnel works because:
-- Khaata shows traders their **problems** (low win rate, revenge trading, poor R:R)
+- Hisaab shows traders their **problems** (low win rate, revenge trading, poor R:R)
 - Metis offers the **solution** (AI-powered stock analysis for better entry/exit decisions)
 - The upgrade moment is natural, not forced
 
@@ -516,5 +516,4 @@ The funnel works because:
 ## Sources
 
 - [SEBI F&O Trader Study FY25](https://www.sebi.gov.in/media-and-notifications/press-releases/sep-2024/)
-- [Khaata by Pranay Gupta](https://github.com/thepranaygupta/khaata) — reference implementation
 - See `.pm/research/` for full market research, user research, funnel strategy, and broker CSV format docs
