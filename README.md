@@ -49,7 +49,7 @@ Hisaab removes the friction entirely.
 ```
 1. Export your tradebook from Zerodha or Groww
 2. Drop the file on hisaab.trymetis.app
-3. See your P&L, win rate, and patterns -- instantly.
+3. See your P&L, win rate, and patterns. Instantly.
 ```
 
 That's it. No account. No setup. Everything runs in your browser and stays on your device.
@@ -64,22 +64,22 @@ That's it. No account. No setup. Everything runs in your browser and stays on yo
 
 ### Analytics & Insights
 
-- **Instant P&L** -- Net profit, win rate, profit factor
-- **FIFO Matching** -- Auto buy/sell matching with partial fills
-- **Visual Analytics** -- Equity curve, monthly P&L, drawdown chart
-- **Calendar Heatmap** -- Daily P&L grid across the financial year
-- **Advanced Metrics** -- Sharpe ratio, Monte Carlo, Kelly criterion
+- **Instant P&L:** Net profit, win rate, profit factor
+- **FIFO Matching:** Auto buy/sell matching with partial fills
+- **Visual Analytics:** Equity curve, monthly P&L, drawdown chart
+- **Calendar Heatmap:** Daily P&L grid across the financial year
+- **Advanced Metrics:** Sharpe ratio, Monte Carlo, Kelly criterion
 
 </td>
 <td width="50%" valign="top">
 
 ### Journal & Reports
 
-- **Trade Journal** -- Notes, strategy tags, emotion tracking, ratings
-- **Tax Reports** -- STCG/LTCG classification, ITR-ready CSV export
-- **Multi-Broker** -- Zerodha, Kite, Groww, Upstox, Angel One
-- **100% Private** -- IndexedDB storage, zero network requests
-- **PWA** -- Installable, works offline after first load
+- **Trade Journal:** Notes, strategy tags, emotion tracking, ratings
+- **Tax Reports:** STCG/LTCG classification, ITR-ready CSV export
+- **Multi-Broker:** Zerodha, Kite, Groww, Upstox, Angel One
+- **100% Private:** IndexedDB storage, zero network requests
+- **PWA:** Installable, works offline after first load
 
 </td>
 </tr>
@@ -89,34 +89,15 @@ That's it. No account. No setup. Everything runs in your browser and stays on yo
 
 ## Tech Stack
 
-<table>
-<tr>
-  <td align="center" width="96">
-    <img src="https://skillicons.dev/icons?i=nextjs" width="48" height="48" alt="Next.js" />
-    <br /><sub><b>Next.js</b></sub>
-  </td>
-  <td align="center" width="96">
-    <img src="https://skillicons.dev/icons?i=ts" width="48" height="48" alt="TypeScript" />
-    <br /><sub><b>TypeScript</b></sub>
-  </td>
-  <td align="center" width="96">
-    <img src="https://skillicons.dev/icons?i=tailwind" width="48" height="48" alt="Tailwind CSS" />
-    <br /><sub><b>Tailwind CSS</b></sub>
-  </td>
-  <td align="center" width="96">
-    <img src="https://ui.shadcn.com/favicon.ico" width="48" height="48" alt="shadcn/ui" />
-    <br /><sub><b>shadcn/ui</b></sub>
-  </td>
-  <td align="center" width="96">
-    <img src="https://raw.githubusercontent.com/nicolo-ribaudo/dexie-website-proxy/main/assets/images/dexie-icon.svg" width="48" height="48" alt="Dexie.js" />
-    <br /><sub><b>Dexie.js</b></sub>
-  </td>
-  <td align="center" width="96">
-    <img src="https://recharts.org/favicon.ico" width="48" height="48" alt="Recharts" />
-    <br /><sub><b>Recharts</b></sub>
-  </td>
-</tr>
-</table>
+<p>
+  <img alt="Next.js" src="https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white" />
+  <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white" />
+  <img alt="Tailwind CSS" src="https://img.shields.io/badge/Tailwind_CSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white" />
+  <img alt="shadcn/ui" src="https://img.shields.io/badge/shadcn%2Fui-000000?style=for-the-badge&logo=shadcnui&logoColor=white" />
+  <img alt="Dexie.js" src="https://img.shields.io/badge/Dexie.js-1A73E8?style=for-the-badge&logo=databricks&logoColor=white" />
+  <img alt="Recharts" src="https://img.shields.io/badge/Recharts-22B5BF?style=for-the-badge&logo=chartdotjs&logoColor=white" />
+  <img alt="Papa Parse" src="https://img.shields.io/badge/Papa_Parse-FF6F00?style=for-the-badge&logo=files&logoColor=white" />
+</p>
 
 > Static export. No backend. Deployable anywhere.
 
@@ -164,7 +145,7 @@ Open [localhost:3000](http://localhost:3000) and drop a sample CSV from `public/
 
 ## Contributing
 
-**Broker parsers are the highest-impact contribution** -- every new parser unlocks thousands of users.
+**Broker parsers are the highest-impact contribution.** Every new parser unlocks thousands of users.
 
 <table>
 <tr>
@@ -172,9 +153,9 @@ Open [localhost:3000](http://localhost:3000) and drop a sample CSV from `public/
 
 **Read the docs:**
 
-- [Contributing Guide](CONTRIBUTING.md) -- setup, project structure, parser template, house rules
-- [Code of Conduct](CODE_OF_CONDUCT.md) -- Contributor Covenant v2.1
-- [Security Policy](SECURITY.md) -- vulnerability reporting and architecture scope
+- [Contributing Guide](CONTRIBUTING.md): Setup, project structure, parser template, house rules
+- [Code of Conduct](CODE_OF_CONDUCT.md): Contributor Covenant v2.1
+- [Security Policy](SECURITY.md): Vulnerability reporting and architecture scope
 
 </td>
 <td>
@@ -213,7 +194,7 @@ Open [localhost:3000](http://localhost:3000) and drop a sample CSV from `public/
 
 ## License
 
-MIT -- see [LICENSE](LICENSE) for details.
+MIT. See [LICENSE](LICENSE) for details.
 
 <br />
 
