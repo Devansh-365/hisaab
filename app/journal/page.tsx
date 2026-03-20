@@ -18,6 +18,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { formatPnl } from "@/lib/utils/format";
 import { formatDate } from "@/lib/utils/dates";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
 import { PageHeader } from "@/components/layout/page-header";
 import { ChevronDown, Search, AlertCircle, Plus } from "lucide-react";
 import { StarRating } from "@/components/journal/star-rating";
@@ -65,17 +72,25 @@ export default function JournalPage() {
         <Button
           variant="outline"
           size="sm"
-          onClick={() => setShowManualEntry(!showManualEntry)}
+          onClick={() => setShowManualEntry(true)}
         >
           <Plus className="h-4 w-4 mr-1" />
           Add Trade
         </Button>
       </PageHeader>
 
-      {/* Manual Entry (toggle) */}
-      {showManualEntry && (
-        <ManualEntryForm />
-      )}
+      {/* Manual Entry Dialog (bottom sheet on mobile) */}
+      <Dialog open={showManualEntry} onOpenChange={setShowManualEntry}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Add Trade Manually</DialogTitle>
+            <DialogDescription>
+              Add trades from unsupported brokers or paper trades.
+            </DialogDescription>
+          </DialogHeader>
+          <ManualEntryForm />
+        </DialogContent>
+      </Dialog>
 
       {/* Stats bar */}
       {stats.unreviewed > 0 && (
