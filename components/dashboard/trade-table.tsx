@@ -17,6 +17,17 @@ import { formatINR, formatPnl, formatPercent } from "@/lib/utils/format";
 import { formatDate } from "@/lib/utils/dates";
 import { ArrowUpDown, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+  PaginationEllipsis,
+} from "@/components/ui/pagination";
+
+const PAGE_SIZE = 50;
 
 interface TradeTableProps {
   trades: MatchedTradeRecord[];
@@ -29,6 +40,7 @@ export function TradeTable({ trades }: TradeTableProps) {
   const [search, setSearch] = useState("");
   const [sortKey, setSortKey] = useState<SortKey>("exitDate");
   const [sortDir, setSortDir] = useState<SortDir>("desc");
+  const [page, setPage] = useState(0);
 
   const closed = useMemo(
     () => trades.filter((t) => t.status === "CLOSED"),
@@ -37,7 +49,9 @@ export function TradeTable({ trades }: TradeTableProps) {
 
   const filtered = useMemo(() => {
     const q = search.toLowerCase();
-    return closed.filter((t) => t.symbol.toLowerCase().includes(q));
+    const result = closed.filter((t) => t.symbol.toLowerCase().includes(q));
+    setPage(0); // reset page on search
+    return result;
   }, [closed, search]);
 
   const sorted = useMemo(() => {
@@ -64,6 +78,11 @@ export function TradeTable({ trades }: TradeTableProps) {
     });
   }, [filtered, sortKey, sortDir]);
 
+  const totalPages = Math.max(1, Math.ceil(sorted.length / PAGE_SIZE));
+  const pageStart = page * PAGE_SIZE;
+  const pageEnd = pageStart + PAGE_SIZE;
+  const paginated = sorted.slice(pageStart, pageEnd);
+
   function toggleSort(key: SortKey) {
     if (sortKey === key) {
       setSortDir(sortDir === "asc" ? "desc" : "asc");
@@ -71,6 +90,7 @@ export function TradeTable({ trades }: TradeTableProps) {
       setSortKey(key);
       setSortDir("desc");
     }
+    setPage(0);
   }
 
   const SortHeader = ({
@@ -110,7 +130,7 @@ export function TradeTable({ trades }: TradeTableProps) {
         </div>
       </CardHeader>
       <CardContent className="p-0">
-        <div className="overflow-auto max-h-[500px]">
+        <div className="overflow-auto">
           <Table>
             <TableHeader>
               <TableRow>
@@ -136,7 +156,7 @@ export function TradeTable({ trades }: TradeTableProps) {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {sorted.slice(0, 100).map((trade) => {
+              {paginated.map((trade) => {
                 const pnl = formatPnl(trade.pnl);
                 return (
                   <TableRow key={trade.id}>
@@ -165,12 +185,16 @@ export function TradeTable({ trades }: TradeTableProps) {
                     <TableCell className="text-right text-xs">
                       {formatINR(trade.exitPrice, true)}
                     </TableCell>
-                    <TableCell className={`text-right text-xs font-medium ${pnl.className}`}>
+                    <TableCell
+                      className={`text-right text-xs font-medium ${pnl.className}`}
+                    >
                       {pnl.text}
                     </TableCell>
                     <TableCell
                       className={`text-right text-xs ${
-                        trade.pnlPercent >= 0 ? "text-green-600" : "text-red-600"
+                        trade.pnlPercent >= 0
+                          ? "text-green-600"
+                          : "text-red-600"
                       }`}
                     >
                       {formatPercent(trade.pnlPercent)}
@@ -196,10 +220,65 @@ export function TradeTable({ trades }: TradeTableProps) {
             </TableBody>
           </Table>
         </div>
-        {sorted.length > 100 && (
-          <p className="text-xs text-muted-foreground text-center py-2">
-            Showing 100 of {sorted.length} trades
-          </p>
+
+        {/* Pagination */}
+        {totalPages > 1 && (
+          <div className="flex items-center justify-between px-4 py-3 border-t border-border">
+            <p className="text-xs text-muted-foreground">
+              {pageStart + 1}-{Math.min(pageEnd, sorted.length)} of{" "}
+              {sorted.length}
+            </p>
+            <Pagination>
+              <PaginationContent>
+                <PaginationItem>
+                  <PaginationPrevious
+                    onClick={() => page > 0 && setPage(page - 1)}
+                    className={page === 0 ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                    text=""
+                  />
+                </PaginationItem>
+
+                {Array.from({ length: totalPages }, (_, i) => i)
+                  .filter((i) => {
+                    // Show first, last, and pages near current
+                    if (i === 0 || i === totalPages - 1) return true;
+                    if (Math.abs(i - page) <= 1) return true;
+                    return false;
+                  })
+                  .map((i, idx, arr) => {
+                    const items = [];
+                    // Insert ellipsis if gap between visible pages
+                    if (idx > 0 && i - arr[idx - 1] > 1) {
+                      items.push(
+                        <PaginationItem key={`ellipsis-${i}`}>
+                          <PaginationEllipsis />
+                        </PaginationItem>
+                      );
+                    }
+                    items.push(
+                      <PaginationItem key={i}>
+                        <PaginationLink
+                          isActive={i === page}
+                          onClick={() => setPage(i)}
+                          className="cursor-pointer text-xs"
+                        >
+                          {i + 1}
+                        </PaginationLink>
+                      </PaginationItem>
+                    );
+                    return items;
+                  })}
+
+                <PaginationItem>
+                  <PaginationNext
+                    onClick={() => page < totalPages - 1 && setPage(page + 1)}
+                    className={page >= totalPages - 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                    text=""
+                  />
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
+          </div>
         )}
       </CardContent>
     </Card>

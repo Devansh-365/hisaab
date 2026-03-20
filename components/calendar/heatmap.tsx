@@ -63,17 +63,33 @@ export function CalendarHeatmap({ dailyData }: CalendarHeatmapProps) {
 
   const [selectedDay, setSelectedDay] = useState<DailyPnl | null>(null);
 
-  // Generate calendar months for the FY
+  // Determine which months have data in this FY
+  const monthsWithData = useMemo(() => {
+    const set = new Set<string>();
+    for (const d of dailyData) {
+      set.add(d.date.slice(0, 7)); // "2025-04"
+    }
+    return set;
+  }, [dailyData]);
+
+  // Generate calendar months for the FY, but only render months
+  // between the first and last month with data (or all 12 if no data)
   const months = useMemo(() => {
-    const result: { month: number; year: number; label: string; days: (string | null)[][] }[] =
-      [];
+    const allMonths: {
+      month: number;
+      year: number;
+      label: string;
+      key: string;
+      days: (string | null)[][];
+    }[] = [];
 
     for (let i = 0; i < 12; i++) {
       const monthIdx = (3 + i) % 12; // Apr=3, May=4, ... Mar=2
       const year = monthIdx >= 3 ? fyStart : fyStart + 1;
+      const key = `${year}-${String(monthIdx + 1).padStart(2, "0")}`;
       const firstDay = new Date(year, monthIdx, 1);
       const daysInMonth = new Date(year, monthIdx + 1, 0).getDate();
-      const startDow = firstDay.getDay(); // 0=Sun
+      const startDow = firstDay.getDay();
 
       const weeks: (string | null)[][] = [];
       let week: (string | null)[] = new Array(startDow).fill(null);
@@ -91,16 +107,20 @@ export function CalendarHeatmap({ dailyData }: CalendarHeatmapProps) {
         weeks.push(week);
       }
 
-      result.push({
-        month: monthIdx,
-        year,
-        label: MONTHS[i],
-        days: weeks,
-      });
+      allMonths.push({ month: monthIdx, year, label: MONTHS[i], key, days: weeks });
     }
 
-    return result;
-  }, [fyStart]);
+    // If no data, show all months
+    if (monthsWithData.size === 0) return allMonths;
+
+    // Find range of months with data
+    const firstIdx = allMonths.findIndex((m) => monthsWithData.has(m.key));
+    const lastIdx = allMonths.findLastIndex((m) => monthsWithData.has(m.key));
+
+    if (firstIdx === -1) return allMonths;
+
+    return allMonths.slice(firstIdx, lastIdx + 1);
+  }, [fyStart, monthsWithData]);
 
   return (
     <Card>
