@@ -1,0 +1,78 @@
+name: New Broker Support
+description: Request support for a new broker's CSV/XLSX format
+title: "[Broker] "
+labels: ["broker-parser"]
+body:
+  - type: checkboxes
+    id: preflight
+    attributes:
+      label: Before submitting
+      options:
+        - label: I have searched existing issues and this broker is not already requested
+          required: true
+
+  - type: input
+    id: broker_name
+    attributes:
+      label: Broker name
+      placeholder: e.g., 5paisa, IIFL, Kotak Securities
+    validations:
+      required: true
+
+  - type: dropdown
+    id: file_format
+    attributes:
+      label: File format
+      options:
+        - CSV
+        - XLSX
+        - Both
+    validations:
+      required: true
+
+  - type: textarea
+    id: headers
+    attributes:
+      label: Column headers (first row of your export)
+      description: Paste the header row exactly as it appears. Do NOT include any trade data in this field.
+      render: text
+    validations:
+      required: true
+
+  - type: input
+    id: date_format
+    attributes:
+      label: Date format used
+      placeholder: e.g., DD-MM-YYYY, YYYY-MM-DD, DD/MM/YYYY HH:MM:SS
+    validations:
+      required: true
+
+  - type: textarea
+    id: sample_rows
+    attributes:
+      label: Sample rows (anonymize amounts if needed)
+      description: Paste 2-3 sample rows. You may change the amounts but keep the structure intact.
+      render: text
+    validations:
+      required: true
+
+  - type: textarea
+    id: export_steps
+    attributes:
+      label: How to export
+      description: Steps to download the tradebook from this broker's app or website.
+      placeholder: |
+        1. Log in to broker website
+        2. Go to Reports > Trade History
+        3. Select date range
+        4. Click Download CSV
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: willingness
+    attributes:
+      label: Contribution
+      description: Would you like to help build this parser?
+      options:
+        - label: I'm willing to submit a PR for this parser (see CONTRIBUTING.md for the template)

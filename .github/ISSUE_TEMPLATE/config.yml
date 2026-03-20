@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security Vulnerability
+    url: https://github.com/Devansh-365/hisaab/security/advisories/new
+    about: Report security issues privately. Do NOT open a public issue.
+  - name: Questions & Help
+    url: https://github.com/Devansh-365/hisaab/discussions
+    about: Ask questions in Discussions, not Issues.

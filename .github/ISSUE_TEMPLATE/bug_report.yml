@@ -1,0 +1,111 @@
+name: Bug Report
+description: Report a parsing error, incorrect P&L, or UI issue
+title: "[Bug] "
+labels: ["bug"]
+body:
+  - type: checkboxes
+    id: preflight
+    attributes:
+      label: Before submitting
+      options:
+        - label: I have searched existing issues and this is not a duplicate
+          required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Describe the bug
+      description: A clear description of what's wrong.
+      placeholder: When I upload my tradebook, the P&L shows...
+    validations:
+      required: true
+
+  - type: dropdown
+    id: broker
+    attributes:
+      label: Broker
+      options:
+        - Zerodha
+        - Kite (Kite Web export)
+        - Groww
+        - Upstox
+        - Angel One
+        - Other / Not applicable
+    validations:
+      required: true
+
+  - type: dropdown
+    id: file_type
+    attributes:
+      label: File type
+      options:
+        - CSV
+        - XLSX
+        - Not applicable
+    validations:
+      required: true
+
+  - type: textarea
+    id: csv_headers
+    attributes:
+      label: CSV/XLSX headers (first row only, no trade data)
+      description: Paste the column header row from your file. Do NOT include any trade data.
+      render: text
+      placeholder: "trade_date, exchange, segment, symbol, trade_type, quantity, price, ..."
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Numbered steps to trigger the bug.
+      value: |
+        1. Upload file
+        2. Go to...
+        3. See error
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: What you expected to happen instead.
+    validations:
+      required: true
+
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Screenshots
+      description: If applicable, add screenshots to help explain the issue. Drag and drop images here.
+
+  - type: dropdown
+    id: browser
+    attributes:
+      label: Browser
+      options:
+        - Chrome
+        - Safari
+        - Firefox
+        - Edge
+        - Arc
+        - Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: device
+    attributes:
+      label: Device
+      options:
+        - Desktop
+        - Mobile
+        - Tablet
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional context
+      description: Anything else that might help us diagnose the issue.
