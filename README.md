@@ -113,6 +113,6 @@ MIT
 
 <div align="center">
 
-<sub>Built by <a href="https://github.com/Devansh-365">Devansh Tiwari</a> · Get AI-powered stock analysis at <a href="https://trymetis.app?utm_source=hisaab&utm_medium=readme&utm_content=footer">trymetis.app</a></sub>
+<sub>Built by <a href="https://github.com/Devansh-365">Devansh Tiwari</a> · Get AI-powered stock analysis at <a href="https://trymetis.app?utm_source=hisaab&utm_medium=readme&utm_content=footer">Metis</a></sub>
 
 </div>
