@@ -117,7 +117,7 @@ export function CalendarHeatmap({ dailyData }: CalendarHeatmapProps) {
     const firstIdx = allMonths.findIndex((m) => monthsWithData.has(m.key));
     const lastIdx = allMonths.findLastIndex((m) => monthsWithData.has(m.key));
 
-    if (firstIdx === -1) return allMonths;
+    if (firstIdx === -1 || lastIdx === -1) return allMonths;
 
     return allMonths.slice(firstIdx, lastIdx + 1);
   }, [fyStart, monthsWithData]);
