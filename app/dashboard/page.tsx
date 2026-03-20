@@ -26,8 +26,9 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Upload, Home } from "lucide-react";
+import { Upload, Home, BarChart3 } from "lucide-react";
 import Link from "next/link";
+import { EmptyState } from "@/components/layout/empty-state";
 
 export default function DashboardPage() {
   const allTrades = useMatchedTrades();
@@ -62,19 +63,11 @@ export default function DashboardPage() {
 
   if (allTrades.length === 0) {
     return (
-      <div className="flex flex-col flex-1 items-center justify-center px-4 py-16">
-        <div className="w-full max-w-xl space-y-6 text-center">
-          <h1 className="text-2xl font-bold">No trades yet</h1>
-          <p className="text-muted-foreground">
-            Upload your broker tradebook to get started.
-          </p>
-          <DropZone />
-          <Button variant="outline" render={<Link href="/" />}>
-            <Home className="h-4 w-4 mr-2" />
-            Back to Home
-          </Button>
-        </div>
-      </div>
+      <EmptyState
+        icon={BarChart3}
+        title="No trades yet"
+        description="Upload your broker tradebook to see your P&L dashboard, win rate, and performance charts."
+      />
     );
   }
 

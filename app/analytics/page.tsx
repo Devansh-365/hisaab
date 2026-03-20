@@ -24,10 +24,11 @@ import {
   exportAllDataJSON,
   downloadFile,
 } from "@/lib/utils/export";
-import { Download, FileJson, FileSpreadsheet } from "lucide-react";
+import { Download, FileJson, FileSpreadsheet, Activity } from "lucide-react";
 import { formatINR } from "@/lib/utils/format";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { MetisAnalyticsCTA } from "@/components/metis/cta-banner";
+import { EmptyState } from "@/components/layout/empty-state";
 
 export default function AnalyticsPage() {
   const allTrades = useMatchedTrades();
@@ -80,6 +81,16 @@ export default function AnalyticsPage() {
   async function handleExportJSON() {
     const json = await exportAllDataJSON();
     downloadFile(json, `hisaab-backup-${new Date().toISOString().slice(0, 10)}.json`, "application/json");
+  }
+
+  if (allTrades.length === 0) {
+    return (
+      <EmptyState
+        icon={Activity}
+        title="No analytics yet"
+        description="Upload your trades to see Sharpe ratio, drawdown, Monte Carlo simulation, and behavioral patterns."
+      />
+    );
   }
 
   return (

@@ -27,6 +27,8 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { PageHeader } from "@/components/layout/page-header";
+import { EmptyState } from "@/components/layout/empty-state";
+import { BookOpen } from "lucide-react";
 import { ChevronDown, Search, AlertCircle, Plus } from "lucide-react";
 import { StarRating } from "@/components/journal/star-rating";
 
@@ -67,6 +69,16 @@ export default function JournalPage() {
     }
     return result;
   }, [closed, search, filter]);
+
+  if (allTrades.length === 0) {
+    return (
+      <EmptyState
+        icon={BookOpen}
+        title="No trades to journal"
+        description="Upload your broker tradebook first, then come back to annotate your trades with notes, tags, and ratings."
+      />
+    );
+  }
 
   return (
     <div className="flex flex-col flex-1 px-4 py-6 max-w-7xl mx-auto w-full space-y-6">
