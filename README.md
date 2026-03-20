@@ -108,7 +108,13 @@ Static export. No backend. Deployable anywhere.
 
 ### Contributing
 
-PRs welcome. If your broker isn't supported, open an issue with an anonymized sample CSV.
+PRs welcome. Broker parsers are the highest-impact contribution -- every new parser unlocks thousands of users.
+
+- **[Contributing Guide](CONTRIBUTING.md)** -- setup, project structure, parser template, house rules
+- **[Code of Conduct](CODE_OF_CONDUCT.md)** -- Contributor Covenant v2.1
+- **[Security Policy](SECURITY.md)** -- vulnerability reporting and architecture scope
+
+If your broker isn't supported, [open a broker support request](https://github.com/Devansh-365/hisaab/issues/new?template=broker_support.yml) with an anonymized sample CSV. New to open source? Look for issues labeled [`good first issue`](https://github.com/Devansh-365/hisaab/labels/good%20first%20issue).
 
 <br />
 
