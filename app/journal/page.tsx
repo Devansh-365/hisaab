@@ -18,9 +18,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { formatPnl } from "@/lib/utils/format";
 import { formatDate } from "@/lib/utils/dates";
-import { ChevronDown, Search, AlertCircle } from "lucide-react";
+import { PageHeader } from "@/components/layout/page-header";
+import { ChevronDown, Search, AlertCircle, Plus } from "lucide-react";
 import { StarRating } from "@/components/journal/star-rating";
-import Link from "next/link";
 
 export default function JournalPage() {
   const allTrades = useMatchedTrades();
@@ -30,6 +30,7 @@ export default function JournalPage() {
   const [filter, setFilter] = useState<"all" | "reviewed" | "unreviewed">(
     "all"
   );
+  const [showManualEntry, setShowManualEntry] = useState(false);
 
   const closed = useMemo(
     () =>
@@ -60,20 +61,21 @@ export default function JournalPage() {
 
   return (
     <div className="flex flex-col flex-1 px-4 py-6 max-w-5xl mx-auto w-full space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <Link
-            href="/"
-            className="text-xl font-bold text-primary hover:opacity-80"
-          >
-            Hisaab
-          </Link>
-          <span className="text-muted-foreground">/</span>
-          <h1 className="text-lg font-semibold">Journal</h1>
-        </div>
-        <div className="flex items-center gap-2" />
-      </div>
+      <PageHeader title="Journal">
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => setShowManualEntry(!showManualEntry)}
+        >
+          <Plus className="h-4 w-4 mr-1" />
+          Add Trade
+        </Button>
+      </PageHeader>
+
+      {/* Manual Entry (toggle) */}
+      {showManualEntry && (
+        <ManualEntryForm />
+      )}
 
       {/* Stats bar */}
       {stats.unreviewed > 0 && (
@@ -237,8 +239,6 @@ export default function JournalPage() {
         </CardContent>
       </Card>
 
-      {/* Manual Entry */}
-      <ManualEntryForm />
     </div>
   );
 }
