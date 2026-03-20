@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, useRef, useEffect } from "react";
 import { useMatchedTrades } from "@/hooks/use-trades";
 import { PageHeader } from "@/components/layout/page-header";
 import { AdvancedMetricsCard } from "@/components/analytics/advanced-metrics";
@@ -35,6 +35,10 @@ export default function AnalyticsPage() {
     typeof runMonteCarlo
   > | null>(null);
   const [mcLoading, setMcLoading] = useState(false);
+  const mountedRef = useRef(true);
+  useEffect(() => {
+    return () => { mountedRef.current = false; };
+  }, []);
 
   const advancedMetrics = useMemo(
     () => computeAdvancedMetrics(allTrades),
@@ -59,11 +63,12 @@ export default function AnalyticsPage() {
 
   function handleMonteCarlo() {
     setMcLoading(true);
-    // Run async to avoid blocking UI
     setTimeout(() => {
       const result = runMonteCarlo(allTrades);
-      setMonteCarloResult(result);
-      setMcLoading(false);
+      if (mountedRef.current) {
+        setMonteCarloResult(result);
+        setMcLoading(false);
+      }
     }, 50);
   }
 

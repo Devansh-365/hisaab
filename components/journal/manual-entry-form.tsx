@@ -26,9 +26,19 @@ export function ManualEntryForm() {
 
     setStatus("saving");
 
-    const dateISO = new Date(tradeDate).toISOString();
+    const parsedDate = new Date(tradeDate);
+    if (isNaN(parsedDate.getTime())) {
+      setStatus("idle");
+      return;
+    }
+    const dateISO = parsedDate.toISOString();
     const qty = parseInt(quantity);
     const prc = parseFloat(price);
+
+    if (isNaN(qty) || qty <= 0 || isNaN(prc) || prc <= 0) {
+      setStatus("idle");
+      return;
+    }
 
     const trade: TradeRecord = {
       id: ulid(),

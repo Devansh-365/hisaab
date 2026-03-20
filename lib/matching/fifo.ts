@@ -9,7 +9,6 @@ interface QueueEntry {
 }
 
 export function matchTradesFIFO(trades: TradeRecord[]): MatchedTradeRecord[] {
-  // Group by symbol
   const bySymbol = new Map<string, TradeRecord[]>();
   for (const trade of trades) {
     const existing = bySymbol.get(trade.symbol) ?? [];
@@ -20,7 +19,6 @@ export function matchTradesFIFO(trades: TradeRecord[]): MatchedTradeRecord[] {
   const matched: MatchedTradeRecord[] = [];
 
   for (const [symbol, symbolTrades] of bySymbol) {
-    // Sort chronologically
     const sorted = [...symbolTrades].sort((a, b) =>
       a.tradeDate.localeCompare(b.tradeDate)
     );
@@ -29,24 +27,30 @@ export function matchTradesFIFO(trades: TradeRecord[]): MatchedTradeRecord[] {
     const sellQueue: QueueEntry[] = [];
 
     for (const trade of sorted) {
+      let remainingQty = trade.quantity;
+
       if (trade.tradeType === "BUY") {
         // Try to close short positions first (FIFO)
-        if (sellQueue.length > 0) {
-          matchFromQueue(sellQueue, trade, "SHORT", symbol, matched);
-        } else {
-          buyQueue.push({ trade, remainingQty: trade.quantity });
+        remainingQty = matchAgainstQueue(
+          sellQueue, trade, remainingQty, "SHORT", symbol, matched
+        );
+        // Leftover goes to buy queue (opens new long)
+        if (remainingQty > 0) {
+          buyQueue.push({ trade, remainingQty });
         }
       } else {
-        // SELL — close long positions first (FIFO)
-        if (buyQueue.length > 0) {
-          matchFromQueue(buyQueue, trade, "LONG", symbol, matched);
-        } else {
-          sellQueue.push({ trade, remainingQty: trade.quantity });
+        // SELL: close long positions first (FIFO)
+        remainingQty = matchAgainstQueue(
+          buyQueue, trade, remainingQty, "LONG", symbol, matched
+        );
+        // Leftover goes to sell queue (opens new short)
+        if (remainingQty > 0) {
+          sellQueue.push({ trade, remainingQty });
         }
       }
     }
 
-    // Remaining in queues → open positions
+    // Remaining in queues = open positions
     for (const entry of buyQueue) {
       if (entry.remainingQty > 0) {
         matched.push(createOpenPosition(entry, symbol, "LONG"));
@@ -62,18 +66,22 @@ export function matchTradesFIFO(trades: TradeRecord[]): MatchedTradeRecord[] {
   return matched.sort((a, b) => a.entryDate.localeCompare(b.entryDate));
 }
 
-function matchFromQueue(
+/**
+ * Match incoming trade against a queue. Returns the remaining unmatched quantity.
+ */
+function matchAgainstQueue(
   queue: QueueEntry[],
   incomingTrade: TradeRecord,
+  incomingQty: number,
   direction: "LONG" | "SHORT",
   symbol: string,
   results: MatchedTradeRecord[]
-) {
-  let remainingIncoming = incomingTrade.quantity;
+): number {
+  let remaining = incomingQty;
 
-  while (remainingIncoming > 0 && queue.length > 0) {
+  while (remaining > 0 && queue.length > 0) {
     const front = queue[0];
-    const matchQty = Math.min(front.remainingQty, remainingIncoming);
+    const matchQty = Math.min(front.remainingQty, remaining);
 
     const isLong = direction === "LONG";
     const entryTrade = isLong ? front.trade : incomingTrade;
@@ -85,49 +93,52 @@ function matchFromQueue(
       ? (exitPrice - entryPrice) * matchQty
       : (entryPrice - exitPrice) * matchQty;
     const pnlPercent =
-      entryPrice !== 0 ? ((isLong ? exitPrice - entryPrice : entryPrice - exitPrice) / entryPrice) * 100 : 0;
+      entryPrice !== 0
+        ? ((isLong ? exitPrice - entryPrice : entryPrice - exitPrice) /
+            entryPrice) *
+          100
+        : 0;
+
+    const entryDate = isLong
+      ? front.trade.tradeDate
+      : incomingTrade.tradeDate;
+    const exitDate = isLong
+      ? incomingTrade.tradeDate
+      : front.trade.tradeDate;
 
     results.push({
       id: ulid(),
       symbol,
-      segment: entryTrade.segment === "FO" || exitTrade.segment === "FO" ? "FO" : "EQ",
+      segment:
+        entryTrade.segment === "FO" || exitTrade.segment === "FO"
+          ? "FO"
+          : entryTrade.segment === "CD" || exitTrade.segment === "CD"
+            ? "FO" // treat CD as FO for matching purposes
+            : "EQ",
       direction,
-      entryDate: isLong ? front.trade.tradeDate : incomingTrade.tradeDate,
-      exitDate: isLong ? incomingTrade.tradeDate : front.trade.tradeDate,
+      entryDate,
+      exitDate,
       entryPrice,
       exitPrice,
       quantity: matchQty,
       pnl,
       pnlPercent,
-      holdingDays: daysBetween(
-        isLong ? front.trade.tradeDate : incomingTrade.tradeDate,
-        isLong ? incomingTrade.tradeDate : front.trade.tradeDate
-      ),
+      holdingDays: daysBetween(entryDate, exitDate),
       status: "CLOSED",
-      financialYear: getFY(isLong ? incomingTrade.tradeDate : front.trade.tradeDate),
+      financialYear: getFY(exitDate),
       entryTradeIds: [entryTrade.id],
       exitTradeIds: [exitTrade.id],
     });
 
     front.remainingQty -= matchQty;
-    remainingIncoming -= matchQty;
+    remaining -= matchQty;
 
     if (front.remainingQty <= 0) {
       queue.shift();
     }
   }
 
-  // If incoming trade has leftover, add to opposite queue
-  if (remainingIncoming > 0) {
-    // This means the queue was exhausted — the remaining goes into a new position
-    // For LONG direction: incoming is SELL, excess goes to sellQueue (new short)
-    // For SHORT direction: incoming is BUY, excess goes to buyQueue (new long)
-    // But we don't have access to the other queue here, so we push back to same queue
-    // Actually, leftover incoming means we need to open a new position in the opposite direction
-    // We'll handle this by pushing to the queue (caller's queue is the wrong one)
-    // Simplification: push remaining back as a queue entry
-    queue.push({ trade: incomingTrade, remainingQty: remainingIncoming });
-  }
+  return remaining;
 }
 
 function createOpenPosition(
@@ -141,7 +152,7 @@ function createOpenPosition(
     segment: entry.trade.segment === "FO" ? "FO" : "EQ",
     direction,
     entryDate: entry.trade.tradeDate,
-    exitDate: entry.trade.tradeDate, // same as entry for open
+    exitDate: entry.trade.tradeDate,
     entryPrice: entry.trade.price,
     exitPrice: 0,
     quantity: entry.remainingQty,

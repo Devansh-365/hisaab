@@ -91,6 +91,7 @@ async function parseCSV(file: File, importId: string): Promise<ParseResult> {
 }
 
 async function parseXLSX(file: File, importId: string): Promise<ParseResult> {
+  try {
   const XLSX = await import("xlsx");
   const buffer = await file.arrayBuffer();
   const workbook = XLSX.read(buffer);
@@ -148,4 +149,16 @@ async function parseXLSX(file: File, importId: string): Promise<ParseResult> {
   if (broker === "angel") return parseAngel(csvText, file.name, importId);
 
   return parseGroww(jsonRows, headers, file.name, importId);
+  } catch (err) {
+    return {
+      trades: [],
+      errors: [{
+        row: 0,
+        field: "file",
+        value: file.name,
+        message: `Failed to parse XLSX: ${err instanceof Error ? err.message : "Unknown error"}`,
+      }],
+      meta: { broker: "unknown", fileName: file.name, totalRows: 0, parsedRows: 0, skippedRows: 0, dateRange: null },
+    };
+  }
 }
