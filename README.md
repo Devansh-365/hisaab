@@ -45,14 +45,18 @@ That's it. No account. No setup. Everything runs in your browser and stays on yo
 
 ### What you get
 
-| | |
-|---|---|
-| **Instant P&L** | Net profit, win rate, profit factor. Computed in seconds. |
-| **FIFO Matching** | Automatic buy/sell matching with partial fill support |
-| **Visual Analytics** | Cumulative equity curve, monthly P&L bars, trade distribution |
-| **Multi-Broker** | Zerodha CSV, Groww XLSX. More coming. |
-| **FY Aware** | Indian financial year (Apr to Mar) built in |
-| **100% Private** | IndexedDB storage, zero network requests, verifiable via DevTools |
+<table width="100%">
+<tr><td width="180"><strong>Instant P&L</strong></td><td>Net profit, win rate, profit factor. Computed in seconds.</td></tr>
+<tr><td><strong>FIFO Matching</strong></td><td>Automatic buy/sell matching with partial fill support</td></tr>
+<tr><td><strong>Visual Analytics</strong></td><td>Equity curve, monthly P&L bars, drawdown chart, day-of-week analysis</td></tr>
+<tr><td><strong>Trade Journal</strong></td><td>Notes, strategy tags, emotion tracking, star ratings on every trade</td></tr>
+<tr><td><strong>Calendar Heatmap</strong></td><td>Daily P&L grid across the financial year. Click any day to drill down.</td></tr>
+<tr><td><strong>Tax Reports</strong></td><td>STCG/LTCG classification, Rs 1.25L exemption, ITR-ready CSV export</td></tr>
+<tr><td><strong>Multi-Broker</strong></td><td>Zerodha, Kite, Groww, Upstox, Angel One. CSV and XLSX.</td></tr>
+<tr><td><strong>Advanced Analytics</strong></td><td>Sharpe ratio, max drawdown, Monte Carlo simulation, Kelly criterion</td></tr>
+<tr><td><strong>100% Private</strong></td><td>IndexedDB storage, zero network requests, verifiable via DevTools</td></tr>
+<tr><td><strong>PWA</strong></td><td>Installable, works offline after first load</td></tr>
+</table>
 
 <br />
 
@@ -90,12 +94,15 @@ Static export. No backend. Deployable anywhere.
 
 - [x] CSV upload + instant P&L dashboard
 - [x] FIFO trade matching with partial fills
-- [x] Zerodha & Groww parser
-- [ ] Trade notes, tags & journaling
-- [ ] Calendar heatmap
-- [ ] Advanced analytics (Sharpe, drawdown, Monte Carlo)
-- [ ] Tax report generation (STCG/LTCG)
-- [ ] PWA offline support
+- [x] Zerodha, Kite, Groww, Upstox, Angel One parsers
+- [x] Trade journal with notes, tags, ratings
+- [x] Calendar heatmap with FY view
+- [x] Advanced analytics (Sharpe, drawdown, Monte Carlo, Kelly)
+- [x] Tax report generation (STCG/LTCG with exemption)
+- [x] PWA with offline support
+- [ ] AI behavioral nudges (client-side pattern detection)
+- [ ] Shareable stats card for social media
+- [ ] Dark mode
 
 <br />
 
