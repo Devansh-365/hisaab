@@ -10,6 +10,7 @@ import {
   storeImport,
   useTradeCount,
 } from "@/hooks/use-trades";
+import { Skeleton } from "@/components/ui/skeleton";
 import { db } from "@/lib/storage/db";
 import { ulid } from "ulid";
 
@@ -110,10 +111,25 @@ export default function DemoPage() {
 
   return (
     <div className="flex flex-col flex-1 items-center justify-center px-4">
-      <div className="text-center space-y-3">
-        <div className="h-8 w-8 mx-auto rounded-full border-2 border-primary border-t-transparent animate-spin" />
-        <p className="text-xs text-primary font-medium">Hisaab</p>
-        <p className="text-sm text-muted-foreground">{status}</p>
+      <div className="w-full max-w-md space-y-6">
+        <div className="text-center space-y-3">
+          <div className="h-8 w-8 mx-auto rounded-full border-2 border-primary border-t-transparent animate-spin" />
+          <p className="text-xs text-primary font-medium">Hisaab</p>
+          <p className="text-sm text-muted-foreground">{status}</p>
+        </div>
+        {/* Skeleton preview of the dashboard being built */}
+        <div className="space-y-4 opacity-50">
+          <div className="grid grid-cols-3 gap-2">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <Skeleton key={i} className="h-16 rounded-lg" />
+            ))}
+          </div>
+          <div className="grid grid-cols-2 gap-2">
+            <Skeleton className="h-32 rounded-lg" />
+            <Skeleton className="h-32 rounded-lg" />
+          </div>
+          <Skeleton className="h-24 rounded-lg" />
+        </div>
       </div>
     </div>
   );

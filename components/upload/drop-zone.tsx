@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useCallback, useRef } from "react";
-import { Upload, FileSpreadsheet, AlertCircle, Check } from "lucide-react";
+import { Upload, FileSpreadsheet, AlertCircle, Check, Loader2 } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { BrokerStrip } from "@/components/brokers/broker-logos";
@@ -144,12 +145,26 @@ export function DropZone({ onComplete }: DropZoneProps) {
 
         {state.status === "parsing" && (
           <>
-            <div className="rounded-full bg-primary/10 p-4 animate-pulse">
-              <FileSpreadsheet className="h-8 w-8 text-primary" />
+            <div className="rounded-full bg-primary/10 p-4">
+              <Loader2 className="h-8 w-8 text-primary animate-spin" />
             </div>
-            <p className="text-sm text-muted-foreground">
-              Parsing {state.fileName}...
-            </p>
+            <div>
+              <p className="text-sm font-medium">
+                Parsing {state.fileName}
+              </p>
+              <p className="text-xs text-muted-foreground mt-1">
+                Detecting broker, validating trades, matching P&L...
+              </p>
+            </div>
+            {/* Skeleton preview of incoming dashboard */}
+            <div className="w-full space-y-2 mt-2">
+              <div className="flex gap-2">
+                <Skeleton className="h-8 flex-1 rounded" />
+                <Skeleton className="h-8 flex-1 rounded" />
+                <Skeleton className="h-8 flex-1 rounded" />
+              </div>
+              <Skeleton className="h-2 w-3/4 mx-auto rounded" />
+            </div>
           </>
         )}
 

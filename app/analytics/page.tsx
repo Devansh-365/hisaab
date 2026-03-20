@@ -24,7 +24,8 @@ import {
   exportAllDataJSON,
   downloadFile,
 } from "@/lib/utils/export";
-import { Download, FileJson, FileSpreadsheet, Activity } from "lucide-react";
+import { Download, FileJson, FileSpreadsheet, Activity, Loader2 } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
 import { formatINR } from "@/lib/utils/format";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { MetisAnalyticsCTA } from "@/components/metis/cta-banner";
@@ -132,10 +133,29 @@ export default function AnalyticsPage() {
               onClick={handleMonteCarlo}
               disabled={mcLoading || allTrades.length === 0}
             >
-              {mcLoading ? "Running..." : "Run 1,000 Simulations"}
+              {mcLoading ? (
+                <>
+                  <Loader2 className="h-3.5 w-3.5 mr-1.5 animate-spin" />
+                  Running...
+                </>
+              ) : (
+                "Run 1,000 Simulations"
+              )}
             </Button>
           </div>
         </CardHeader>
+        {mcLoading && (
+          <CardContent>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <div key={i} className="space-y-2">
+                  <Skeleton className="h-3 w-24" />
+                  <Skeleton className="h-5 w-16" />
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        )}
         {monteCarloResult && (
           <CardContent>
             <p className="text-xs text-muted-foreground mb-3">
