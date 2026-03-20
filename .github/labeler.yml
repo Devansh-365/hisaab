@@ -1,0 +1,31 @@
+parsers:
+  - changed-files:
+      - any-glob-to-any-file: lib/parsers/**
+
+matching:
+  - changed-files:
+      - any-glob-to-any-file: lib/matching/**
+
+analytics:
+  - changed-files:
+      - any-glob-to-any-file: lib/analytics/**
+
+ui:
+  - changed-files:
+      - any-glob-to-any-file:
+          - components/**
+          - app/**
+
+documentation:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "*.md"
+          - docs/**
+
+ci:
+  - changed-files:
+      - any-glob-to-any-file: .github/**
+
+storage:
+  - changed-files:
+      - any-glob-to-any-file: lib/storage/**
