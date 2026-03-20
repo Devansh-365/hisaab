@@ -1,6 +1,15 @@
 import type { MatchedTradeRecord } from "@/lib/types";
 import { db } from "@/lib/storage/db";
 
+/** Sanitize a string for CSV to prevent formula injection in spreadsheets. */
+function sanitizeCSVCell(value: string): string {
+  let s = value.replace(/"/g, '""').replace(/\n/g, " ");
+  if (/^[=+\-@\t\r]/.test(s)) {
+    s = "'" + s;
+  }
+  return s;
+}
+
 export async function exportMatchedTradesCSV(): Promise<string> {
   const trades = await db.matchedTrades
     .where("status")
@@ -25,7 +34,7 @@ export async function exportMatchedTradesCSV(): Promise<string> {
   ];
 
   const rows = trades.map((t) => [
-    t.symbol,
+    sanitizeCSVCell(t.symbol),
     t.direction,
     t.entryDate.slice(0, 10),
     t.exitDate.slice(0, 10),
@@ -35,11 +44,10 @@ export async function exportMatchedTradesCSV(): Promise<string> {
     t.pnl.toFixed(2),
     t.pnlPercent.toFixed(2),
     t.holdingDays,
-    (t.tags ?? []).join("; "),
-    t.emotion ?? "",
+    sanitizeCSVCell((t.tags ?? []).join("; ")),
+    sanitizeCSVCell(t.emotion ?? ""),
     t.rating ?? "",
-    // Sanitize notes for CSV (escape quotes, remove newlines)
-    (t.notes ?? "").replace(/"/g, '""').replace(/\n/g, " "),
+    sanitizeCSVCell(t.notes ?? ""),
   ]);
 
   const csv = [
