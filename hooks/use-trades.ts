@@ -71,6 +71,60 @@ export async function storeImport(record: ImportRecord): Promise<void> {
   await db.imports.add(record);
 }
 
+// Phase 2: Annotation updates
+export async function updateTradeNotes(
+  tradeId: string,
+  notes: string
+): Promise<void> {
+  await db.matchedTrades.update(tradeId, { notes });
+}
+
+export async function updateTradeTags(
+  tradeId: string,
+  tags: string[]
+): Promise<void> {
+  await db.matchedTrades.update(tradeId, { tags });
+}
+
+export async function updateTradeEmotion(
+  tradeId: string,
+  emotion: string
+): Promise<void> {
+  await db.matchedTrades.update(tradeId, { emotion });
+}
+
+export async function updateTradeRating(
+  tradeId: string,
+  rating: number
+): Promise<void> {
+  await db.matchedTrades.update(tradeId, { rating });
+}
+
+export async function updateTradeAnnotations(
+  tradeId: string,
+  data: { notes?: string; tags?: string[]; emotion?: string; rating?: number }
+): Promise<void> {
+  await db.matchedTrades.update(tradeId, data);
+}
+
+export function useAnnotationStats() {
+  const stats = useLiveQuery(async () => {
+    const all = await db.matchedTrades
+      .where("status")
+      .equals("CLOSED")
+      .toArray();
+    const annotated = all.filter(
+      (t) => t.notes || (t.tags && t.tags.length > 0) || t.rating
+    );
+    return {
+      total: all.length,
+      annotated: annotated.length,
+      unreviewed: all.length - annotated.length,
+    };
+  }, []);
+  return stats ?? { total: 0, annotated: 0, unreviewed: 0 };
+}
+
 export async function clearAllData(): Promise<void> {
   await db.trades.clear();
   await db.matchedTrades.clear();

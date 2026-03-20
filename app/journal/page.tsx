@@ -1,0 +1,247 @@
+"use client";
+
+import { useState, useMemo } from "react";
+import { useMatchedTrades, useAnnotationStats } from "@/hooks/use-trades";
+import { TradeAnnotation } from "@/components/journal/trade-annotation";
+import { ManualEntryForm } from "@/components/journal/manual-entry-form";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { formatPnl } from "@/lib/utils/format";
+import { formatDate } from "@/lib/utils/dates";
+import { ChevronDown, Search, AlertCircle } from "lucide-react";
+import { StarRating } from "@/components/journal/star-rating";
+import Link from "next/link";
+
+export default function JournalPage() {
+  const allTrades = useMatchedTrades();
+  const stats = useAnnotationStats();
+  const [search, setSearch] = useState("");
+  const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [filter, setFilter] = useState<"all" | "reviewed" | "unreviewed">(
+    "all"
+  );
+
+  const closed = useMemo(
+    () =>
+      allTrades
+        .filter((t) => t.status === "CLOSED")
+        .sort((a, b) => b.exitDate.localeCompare(a.exitDate)),
+    [allTrades]
+  );
+
+  const filtered = useMemo(() => {
+    let result = closed;
+    if (search) {
+      const q = search.toLowerCase();
+      result = result.filter((t) => t.symbol.toLowerCase().includes(q));
+    }
+    if (filter === "reviewed") {
+      result = result.filter(
+        (t) => t.notes || (t.tags && t.tags.length > 0) || t.rating
+      );
+    }
+    if (filter === "unreviewed") {
+      result = result.filter(
+        (t) => !t.notes && (!t.tags || t.tags.length === 0) && !t.rating
+      );
+    }
+    return result;
+  }, [closed, search, filter]);
+
+  return (
+    <div className="flex flex-col flex-1 px-4 py-6 max-w-5xl mx-auto w-full space-y-6">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <Link
+            href="/"
+            className="text-xl font-bold text-primary hover:opacity-80"
+          >
+            Hisaab
+          </Link>
+          <span className="text-muted-foreground">/</span>
+          <h1 className="text-lg font-semibold">Journal</h1>
+        </div>
+        <div className="flex items-center gap-2" />
+      </div>
+
+      {/* Stats bar */}
+      {stats.unreviewed > 0 && (
+        <Card className="border-primary/20 bg-primary/5">
+          <CardContent className="flex items-center gap-3 py-3">
+            <AlertCircle className="h-4 w-4 text-primary" />
+            <p className="text-sm">
+              You have{" "}
+              <span className="font-semibold text-primary">
+                {stats.unreviewed} unreviewed trades
+              </span>
+              . Tag and annotate them to track your patterns.
+            </p>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Filters */}
+      <div className="flex items-center gap-3">
+        <div className="relative flex-1 max-w-xs">
+          <Search className="absolute left-2.5 top-2.5 h-3.5 w-3.5 text-muted-foreground" />
+          <Input
+            placeholder="Search symbol..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="pl-8 h-8 text-xs"
+          />
+        </div>
+        <div className="flex gap-1">
+          {(["all", "unreviewed", "reviewed"] as const).map((f) => (
+            <Button
+              key={f}
+              variant={filter === f ? "default" : "outline"}
+              size="sm"
+              onClick={() => setFilter(f)}
+              className="text-xs capitalize"
+            >
+              {f}
+              {f === "unreviewed" && stats.unreviewed > 0 && (
+                <span className="ml-1 text-[10px]">
+                  ({stats.unreviewed})
+                </span>
+              )}
+            </Button>
+          ))}
+        </div>
+      </div>
+
+      {/* Trade list with expandable annotations */}
+      <Card>
+        <CardContent className="p-0">
+          <div className="overflow-auto">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="w-8" />
+                  <TableHead>Date</TableHead>
+                  <TableHead>Symbol</TableHead>
+                  <TableHead>Dir</TableHead>
+                  <TableHead className="text-right">P&L</TableHead>
+                  <TableHead>Rating</TableHead>
+                  <TableHead>Tags</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {filtered.map((trade) => {
+                  const pnl = formatPnl(trade.pnl);
+                  const isExpanded = expandedId === trade.id;
+                  return (
+                    <Fragment key={trade.id}>
+                      <TableRow
+                        className="cursor-pointer hover:bg-muted/50"
+                        onClick={() =>
+                          setExpandedId(isExpanded ? null : trade.id)
+                        }
+                      >
+                        <TableCell>
+                          <ChevronDown
+                            className={`h-3.5 w-3.5 text-muted-foreground transition-transform ${
+                              isExpanded ? "rotate-180" : ""
+                            }`}
+                          />
+                        </TableCell>
+                        <TableCell className="text-xs">
+                          {formatDate(trade.exitDate)}
+                        </TableCell>
+                        <TableCell className="font-medium text-xs">
+                          {trade.symbol}
+                        </TableCell>
+                        <TableCell>
+                          <Badge
+                            variant={
+                              trade.direction === "LONG"
+                                ? "default"
+                                : "secondary"
+                            }
+                            className="text-[10px] px-1.5"
+                          >
+                            {trade.direction}
+                          </Badge>
+                        </TableCell>
+                        <TableCell
+                          className={`text-right text-xs font-medium ${pnl.className}`}
+                        >
+                          {pnl.text}
+                        </TableCell>
+                        <TableCell>
+                          <StarRating
+                            value={trade.rating ?? 0}
+                            onChange={() => {}}
+                            size="sm"
+                          />
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex gap-1 flex-wrap max-w-[200px]">
+                            {trade.tags?.map((tag) => (
+                              <Badge
+                                key={tag}
+                                variant="outline"
+                                className="text-[9px] px-1"
+                              >
+                                {tag}
+                              </Badge>
+                            ))}
+                            {trade.emotion && (
+                              <Badge
+                                variant="outline"
+                                className="text-[9px] px-1 border-primary/30 text-primary"
+                              >
+                                {trade.emotion}
+                              </Badge>
+                            )}
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                      {isExpanded && (
+                        <TableRow>
+                          <TableCell colSpan={7} className="p-3">
+                            <TradeAnnotation trade={trade} />
+                          </TableCell>
+                        </TableRow>
+                      )}
+                    </Fragment>
+                  );
+                })}
+                {filtered.length === 0 && (
+                  <TableRow>
+                    <TableCell
+                      colSpan={7}
+                      className="text-center text-muted-foreground py-8"
+                    >
+                      {search
+                        ? "No trades match your search"
+                        : "No trades to review"}
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Manual Entry */}
+      <ManualEntryForm />
+    </div>
+  );
+}
+
+// Need Fragment for adjacent table rows
+import { Fragment } from "react";

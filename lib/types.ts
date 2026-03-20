@@ -103,6 +103,52 @@ export interface MonthlyPnl {
   losses: number;
 }
 
+export interface StrategyBreakdown {
+  tag: string;
+  trades: number;
+  wins: number;
+  losses: number;
+  winRate: number;
+  pnl: number;
+  avgPnl: number;
+}
+
+export interface DailyPnl {
+  date: string; // "2025-04-15"
+  pnl: number;
+  trades: number;
+  isAnnotated: boolean;
+}
+
+export interface JournalingStreak {
+  current: number;
+  longest: number;
+  lastAnnotatedDate: string | null;
+}
+
+export const STRATEGY_TAGS = [
+  "breakout",
+  "mean reversion",
+  "momentum",
+  "earnings play",
+  "gap fill",
+  "trend following",
+  "scalp",
+  "swing",
+  "positional",
+  "news based",
+] as const;
+
+export const EMOTION_TAGS = [
+  "disciplined",
+  "fomo",
+  "revenge",
+  "fear",
+  "greed",
+  "patient",
+  "impulsive",
+] as const;
+
 export interface CumulativePnlPoint {
   date: string;
   pnl: number;

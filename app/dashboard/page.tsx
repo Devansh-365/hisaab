@@ -13,14 +13,10 @@ import {
   computeMonthlyPnl,
   computeCumulativePnl,
 } from "@/lib/analytics/basic";
+import { computeJournalingStreak } from "@/lib/analytics/journal";
+import { useAnnotationStats } from "@/hooks/use-trades";
+import { StreakWidget } from "@/components/journal/streak-widget";
 import { getAllFYs, getCurrentFY } from "@/lib/utils/fy";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Upload, Home } from "lucide-react";
 import Link from "next/link";
@@ -50,6 +46,11 @@ export default function DashboardPage() {
     () => computeCumulativePnl(filteredTrades),
     [filteredTrades]
   );
+  const streak = useMemo(
+    () => computeJournalingStreak(filteredTrades),
+    [filteredTrades]
+  );
+  const annotationStats = useAnnotationStats();
 
   if (allTrades.length === 0) {
     return (
@@ -77,31 +78,25 @@ export default function DashboardPage() {
           <Link href="/" className="text-xl font-bold text-primary hover:opacity-80">
             Hisaab
           </Link>
-          <Select
-            value={selectedFY || "all"}
-            onValueChange={(v: string | null) =>
-              setSelectedFY(v === "all" || v === null ? "" : v)
-            }
+          <select
+            value={selectedFY}
+            onChange={(e) => setSelectedFY(e.target.value)}
+            className="h-7 rounded-md border border-input bg-background px-2.5 text-xs font-medium outline-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/50"
           >
-            <SelectTrigger className="w-[140px]" size="sm">
-              <SelectValue placeholder="All Time" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Time</SelectItem>
-              {fys.map((fy) => (
-                <SelectItem key={fy} value={fy}>
-                  {fy}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+            <option value="">All Time</option>
+            {fys.map((fy) => (
+              <option key={fy} value={fy}>
+                {fy}
+              </option>
+            ))}
+          </select>
         </div>
         <Button
           variant="outline"
           size="sm"
           onClick={() => setShowUpload(!showUpload)}
         >
-          <Upload className="h-4 w-4 mr-2" />
+          <Upload className="h-4 w-4 mr-1" />
           Import
         </Button>
       </div>
@@ -111,8 +106,16 @@ export default function DashboardPage() {
         <DropZone onComplete={() => setShowUpload(false)} />
       )}
 
-      {/* KPIs */}
+      {/* KPIs + Streak */}
       <KPICards kpis={kpis} />
+      {annotationStats.total > 0 && (
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+          <StreakWidget
+            streak={streak}
+            unreviewed={annotationStats.unreviewed}
+          />
+        </div>
+      )}
 
       {/* Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
