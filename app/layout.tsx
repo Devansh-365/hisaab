@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Hisaab — Trading Journal for Indian Traders",
+  title: "Hisaab | Trading Journal for Indian Traders",
   description:
     "Upload your broker CSV, see your real win rate in 2 minutes. Zero signup, 100% browser-based, open source.",
 };
