@@ -37,7 +37,7 @@ export default function CalendarPage() {
   }
 
   return (
-    <div className="flex flex-col flex-1 px-4 py-6 max-w-7xl mx-auto w-full space-y-6">
+    <div className="flex flex-col flex-1 px-4 py-6 pb-20 md:pb-6 max-w-7xl mx-auto w-full space-y-6">
       <PageHeader title="Calendar" />
 
       <CalendarHeatmap dailyData={dailyData} />

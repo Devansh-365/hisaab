@@ -31,6 +31,7 @@ import Link from "next/link";
 import { EmptyState } from "@/components/layout/empty-state";
 import { PageLoading } from "@/components/layout/page-loading";
 import { BackupNudge } from "@/components/dashboard/backup-nudge";
+import { ShareCardButton } from "@/components/dashboard/share-card";
 import { useWeeklyNotification } from "@/hooks/use-weekly-notification";
 
 export default function DashboardPage() {
@@ -80,7 +81,7 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="flex flex-col flex-1 px-4 py-6 max-w-7xl mx-auto w-full space-y-6">
+    <div className="flex flex-col flex-1 px-4 py-6 pb-20 md:pb-6 max-w-7xl mx-auto w-full space-y-6">
       <PageHeader title="Dashboard">
         <select
           value={selectedFY}
@@ -94,6 +95,7 @@ export default function DashboardPage() {
             </option>
           ))}
         </select>
+        <ShareCardButton kpis={kpis} financialYear={activeFY} />
         <Button
           variant="outline"
           size="sm"

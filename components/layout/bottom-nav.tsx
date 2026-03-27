@@ -4,7 +4,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import {
-  Home,
   BarChart3,
   BookOpen,
   CalendarDays,
@@ -13,7 +12,6 @@ import {
 import { PoweredByMetis } from "@/components/metis/cta-banner";
 
 const NAV_ITEMS = [
-  { href: "/", label: "Home", icon: Home },
   { href: "/dashboard", label: "Dashboard", icon: BarChart3 },
   { href: "/journal", label: "Journal", icon: BookOpen },
   { href: "/calendar", label: "Calendar", icon: CalendarDays },
@@ -23,6 +21,11 @@ const NAV_ITEMS = [
 export function BottomNav() {
   const pathname = usePathname();
 
+  // Hide on landing page and privacy -- these are marketing pages, not app pages
+  if (pathname === "/" || pathname === "/privacy" || pathname === "/groww-trading-journal") {
+    return null;
+  }
+
   return (
     <nav
       className="fixed bottom-0 left-0 right-0 z-50 md:hidden border-t border-border bg-background/80 backdrop-blur-xl"
@@ -31,10 +34,7 @@ export function BottomNav() {
     >
       <div className="flex items-center justify-around h-16 px-2 max-w-lg mx-auto">
         {NAV_ITEMS.map(({ href, label, icon: Icon }) => {
-          const isActive =
-            href === "/"
-              ? pathname === "/"
-              : pathname.startsWith(href);
+          const isActive = pathname.startsWith(href);
 
           return (
             <Link
