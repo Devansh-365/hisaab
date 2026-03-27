@@ -12,6 +12,7 @@ import { storeTrades, storeMatchedTrades, storeImport } from "@/hooks/use-trades
 import { db } from "@/lib/storage/db";
 import { ulid } from "ulid";
 import type { ParseResult } from "@/lib/types";
+import { requestNotificationPermission } from "@/lib/notifications";
 
 interface DropZoneProps {
   onComplete?: () => void;
@@ -61,6 +62,14 @@ export function DropZone({ onComplete }: DropZoneProps) {
         const allTrades = await db.trades.toArray();
         const matched = matchTradesFIFO(allTrades);
         await storeMatchedTrades(matched);
+
+        // Request persistent storage so iOS Safari doesn't evict data
+        if (navigator.storage?.persist) {
+          await navigator.storage.persist();
+        }
+
+        // Request notification permission for weekly P&L recaps
+        requestNotificationPermission();
 
         setState({ status: "success", result, addedCount });
 

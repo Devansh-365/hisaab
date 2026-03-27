@@ -55,14 +55,14 @@ export default function Home() {
 
         {/* Trust signals */}
         <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs text-muted-foreground">
-          <span className="inline-flex items-center gap-1.5">
+          <Link href="/privacy" className="inline-flex items-center gap-1.5 hover:text-primary transition-colors">
             <Shield className="h-3 w-3 text-primary" />
             100% browser-based
-          </span>
-          <span className="inline-flex items-center gap-1.5">
+          </Link>
+          <Link href="/privacy" className="inline-flex items-center gap-1.5 hover:text-primary transition-colors">
             <Globe className="h-3 w-3 text-primary" />
             No data leaves your device
-          </span>
+          </Link>
           <span className="inline-flex items-center gap-1.5">
             <Github className="h-3 w-3 text-primary" />
             Open source (MIT)

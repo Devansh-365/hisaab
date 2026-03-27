@@ -30,6 +30,8 @@ import { Upload, Home, BarChart3 } from "lucide-react";
 import Link from "next/link";
 import { EmptyState } from "@/components/layout/empty-state";
 import { PageLoading } from "@/components/layout/page-loading";
+import { BackupNudge } from "@/components/dashboard/backup-nudge";
+import { useWeeklyNotification } from "@/hooks/use-weekly-notification";
 
 export default function DashboardPage() {
   const { data: allTrades, isLoading } = useMatchedTradesWithLoading();
@@ -61,6 +63,9 @@ export default function DashboardPage() {
     [filteredTrades]
   );
   const annotationStats = useAnnotationStats();
+
+  // Weekly P&L recap notification (once per session, once per week)
+  useWeeklyNotification(allTrades);
 
   if (isLoading) return <PageLoading />;
 
@@ -111,6 +116,9 @@ export default function DashboardPage() {
           <DropZone onComplete={() => setShowUpload(false)} />
         </DialogContent>
       </Dialog>
+
+      {/* Backup nudge */}
+      <BackupNudge tradeCount={kpis.totalTrades} />
 
       {/* KPIs + Streak */}
       <KPICards kpis={kpis} />
