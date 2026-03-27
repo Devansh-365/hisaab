@@ -1,8 +1,7 @@
 import type { MetadataRoute } from "next";
+import { SITE_URL } from "@/lib/constants";
 
 export const dynamic = "force-static";
-
-const SITE_URL = "https://hisaab.trymetis.app";
 
 export default function robots(): MetadataRoute.Robots {
   return {
@@ -14,5 +13,6 @@ export default function robots(): MetadataRoute.Robots {
       },
     ],
     sitemap: `${SITE_URL}/sitemap.xml`,
+    host: SITE_URL,
   };
 }

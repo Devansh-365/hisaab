@@ -1,0 +1,172 @@
+# Hisaab - Complete Context for LLMs
+
+> A zero-friction trading journal for Indian traders.
+
+## Overview
+
+Hisaab is a free, open-source, 100% browser-based trading journal built for Indian retail traders. It requires no signup, no server, and no data ever leaves the user's browser. Users upload their broker tradebook CSV or XLSX file and instantly see P&L analytics, win rate, and advanced metrics.
+
+URL: https://hisaab.trymetis.app
+Source: https://github.com/Devansh-365/hisaab
+License: MIT
+Author: Devansh Tiwari (https://github.com/Devansh-365)
+
+## Problem Statement
+
+91% of F&O traders in India lost money last year. The #1 differentiator between profitable and losing traders is journaling, yet almost no one does it. The reason is friction - existing tools require accounts, data uploads to external servers, or manual entry. Hisaab eliminates that friction entirely.
+
+## How It Works
+
+1. Export your tradebook from Zerodha, Groww, Upstox, or Angel One
+2. Drop the file on hisaab.trymetis.app
+3. See your P&L, win rate, and patterns instantly
+
+No account. No setup. Everything runs in the browser using IndexedDB for local storage.
+
+## Supported Brokers and File Formats
+
+### Zerodha / Kite
+- File type: CSV
+- Supported columns: trade_date, tradingsymbol, exchange, quantity, price
+- Also supports Kite export variants with order_execution_time or instrument columns
+
+### Groww
+- File types: CSV, XLSX
+- Supported columns: symbol, trade type, quantity, trade price
+- Also supports contract note format: scrip name, buy/sell, quantity, rate
+
+### Upstox
+- File types: CSV, XLSX
+- Tradebook format: exchange, symbol, trade_type, quantity, price
+- Realized P&L format: Scrip Name, Buy Date, Buy Rate, Sell Date, Sell Rate, Qty
+- Handles Excel serial date numbers in P&L exports
+- Each P&L row generates both BUY and SELL trade records
+
+### Angel One
+- File type: CSV
+- Supported columns: trade date, script name, buy/sell, quantity
+
+## Features
+
+### Analytics and Insights
+- Net P&L calculation with FIFO (First In, First Out) trade matching
+- Partial fill support for accurate matching
+- Win rate and profit factor
+- Equity curve visualization
+- Monthly P&L breakdown
+- Drawdown chart and maximum drawdown
+- Sharpe ratio calculation
+- Monte Carlo simulation for risk assessment
+- Kelly criterion for position sizing
+
+### Calendar Heatmap
+- Daily P&L displayed in a calendar grid
+- Indian financial year aware (April to March)
+- Color-coded: green for profitable days, red for losing days
+
+### Trade Journal
+- Add notes to individual trades
+- Strategy tags for categorization
+- Emotion tracking (fear, greed, disciplined, etc.)
+- Trade ratings (1-5 stars)
+- Manual trade entry support
+
+### Tax Reports
+- STCG (Short Term Capital Gains) classification
+- LTCG (Long Term Capital Gains) classification
+- Tax exemption calculations
+- ITR-ready CSV export
+
+### Privacy and Technical
+- 100% client-side processing
+- Zero network requests after initial page load
+- IndexedDB storage via Dexie.js
+- Progressive Web App (PWA) with offline support
+- Static export - deployable anywhere (GitHub Pages, Vercel, Netlify, etc.)
+
+## Tech Stack
+
+- Next.js (static export)
+- TypeScript
+- Tailwind CSS
+- shadcn/ui components
+- Dexie.js (IndexedDB wrapper)
+- Recharts (charts and visualizations)
+- Papa Parse (CSV parsing)
+- xlsx (Excel file parsing)
+- Serwist (service worker / PWA)
+
+## Pages
+
+### Homepage (/)
+Landing page with file upload drop zone. Users drag and drop their broker CSV/XLSX here.
+
+### Demo (/demo)
+Pre-loaded with sample trade data so users can explore the dashboard without uploading their own file.
+
+### Dashboard (/dashboard)
+Main analytics view showing:
+- Net P&L, win rate, total trades, profit factor
+- Average win and average loss amounts
+- Journal streak tracker
+- Cumulative P&L curve
+- Financial year filter
+
+### Journal (/journal)
+Trade-by-trade view with:
+- List of all imported trades
+- Ability to add notes, tags, emotions, and ratings
+- Manual trade entry
+- Search and filter
+
+### Calendar (/calendar)
+Calendar heatmap showing daily P&L performance across the Indian financial year.
+
+### Analytics (/analytics)
+Advanced analytics including:
+- Sharpe ratio
+- Maximum drawdown
+- Monte Carlo simulation
+- Kelly criterion
+- Monthly and weekly P&L breakdowns
+
+## Frequently Asked Questions
+
+### Is my data safe?
+Yes. Hisaab is 100% browser-based. Your trading data never leaves your device. There is no server, no database, no analytics tracking of your financial data. Everything is stored in your browser's IndexedDB.
+
+### Which brokers are supported?
+Zerodha (Kite), Groww, Upstox, and Angel One. The app auto-detects the broker from the CSV/XLSX column headers.
+
+### Does it work offline?
+Yes. Hisaab is a Progressive Web App (PWA). After the first visit, it works completely offline.
+
+### Is it free?
+Yes. Hisaab is free and open source under the MIT license.
+
+### Can I self-host it?
+Yes. Clone the repository, run `npm install && npm run build`, and deploy the `out/` folder anywhere that serves static files.
+
+### What is FIFO matching?
+First In, First Out matching pairs your buy and sell trades chronologically. If you bought 100 shares and later sold 50, it matches the sell against the first 50 shares you bought. This is the standard method used for Indian tax calculations.
+
+### How is the financial year handled?
+Indian financial year runs April 1 to March 31. All FY calculations, calendar views, and tax reports use this convention. A trade on March 15, 2026 belongs to FY2025-26.
+
+## Comparison with Alternatives
+
+### vs Manual Spreadsheets
+Hisaab automates everything. No manual data entry, no formula errors, instant calculations.
+
+### vs Opstra / Sensibull
+Those platforms focus on options analytics and require accounts. Hisaab is free, requires no account, and focuses on trade journaling and P&L analytics.
+
+### vs Zerodha Console
+Zerodha Console shows basic P&L but lacks journaling, advanced analytics (Sharpe, Monte Carlo, Kelly), calendar heatmaps, and tax report generation. Hisaab also works across multiple brokers.
+
+## Contact and Contributing
+
+- GitHub Issues: https://github.com/Devansh-365/hisaab/issues
+- Contributing Guide: https://github.com/Devansh-365/hisaab/blob/main/CONTRIBUTING.md
+- Author: Devansh Tiwari - https://github.com/Devansh-365
+- Parent Product: Metis - https://trymetis.app (AI-powered stock analysis)

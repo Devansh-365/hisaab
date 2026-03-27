@@ -1,0 +1,36 @@
+# Hisaab
+
+> A zero-friction trading journal for Indian traders.
+
+Hisaab is a free, open-source, browser-based trading journal. Upload your broker CSV and see your real win rate in 2 minutes. No signup. No server. No data leaves your browser.
+
+## Key Facts
+
+- URL: https://hisaab.trymetis.app
+- Category: Finance / Trading Tools
+- Price: Free (MIT licensed, open source)
+- Privacy: 100% client-side, zero network requests, data stays in browser (IndexedDB)
+- Supported Brokers: Zerodha, Groww, Upstox, Angel One
+- Tech: Next.js static export, TypeScript, Tailwind CSS, Dexie.js (IndexedDB)
+
+## What Hisaab Does
+
+- Parses broker tradebook CSVs and XLSX files (Zerodha, Groww, Upstox, Angel One)
+- FIFO trade matching with partial fill support
+- Calculates net P&L, win rate, profit factor, Sharpe ratio, max drawdown
+- Monte Carlo simulation and Kelly criterion position sizing
+- Calendar heatmap showing daily P&L across the Indian financial year (Apr-Mar)
+- Trade journal with notes, strategy tags, emotion tracking, and ratings
+- Tax report generation with STCG/LTCG classification and ITR-ready CSV export
+- PWA with offline support
+
+## Who It's For
+
+Indian retail traders and investors who trade on NSE/BSE through Zerodha, Groww, Upstox, or Angel One and want instant analytics without sharing their financial data with any server.
+
+## Links
+
+- Live App: https://hisaab.trymetis.app
+- Demo: https://hisaab.trymetis.app/demo
+- Source Code: https://github.com/Devansh-365/hisaab
+- Full LLM Context: https://hisaab.trymetis.app/llms-full.txt

@@ -4,12 +4,15 @@ import { Toaster } from "@/components/ui/sonner";
 import { BottomNav } from "@/components/layout/bottom-nav";
 import { JsonLd } from "@/components/seo/json-ld";
 import { ThemeProvider } from "@/components/providers/theme-provider";
+import {
+  SITE_URL,
+  SITE_NAME,
+  SITE_TITLE,
+  SITE_DESCRIPTION,
+  SITE_THEME_COLOR,
+  SITE_AUTHOR,
+} from "@/lib/constants";
 import "./globals.css";
-
-const SITE_URL = "https://hisaab.trymetis.app";
-const SITE_TITLE = "Hisaab | Trading Journal for Indian Traders";
-const SITE_DESCRIPTION =
-  "Upload your broker CSV, see your real win rate in 2 minutes. Zero signup, 100% browser-based, open source.";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,7 +28,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
     default: SITE_TITLE,
-    template: "%s | Hisaab",
+    template: `%s | ${SITE_NAME}`,
   },
   description: SITE_DESCRIPTION,
   keywords: [
@@ -44,15 +47,15 @@ export const metadata: Metadata = {
     "BSE",
     "open source",
   ],
-  authors: [{ name: "Devansh Tiwari", url: "https://github.com/Devansh-365" }],
-  creator: "Devansh Tiwari",
-  publisher: "Hisaab",
+  authors: [SITE_AUTHOR],
+  creator: SITE_AUTHOR.name,
+  publisher: SITE_NAME,
   manifest: "/manifest.json",
   openGraph: {
     type: "website",
     locale: "en_IN",
     url: SITE_URL,
-    siteName: "Hisaab",
+    siteName: SITE_NAME,
     title: SITE_TITLE,
     description: SITE_DESCRIPTION,
   },
@@ -74,11 +77,14 @@ export const metadata: Metadata = {
   },
   alternates: {
     canonical: SITE_URL,
+    types: {
+      "application/rss+xml": `${SITE_URL}/feed.xml`,
+    },
   },
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "Hisaab",
+    title: SITE_NAME,
   },
   category: "finance",
 };
@@ -87,7 +93,7 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
-  themeColor: "#2483ff",
+  themeColor: SITE_THEME_COLOR,
 };
 
 export default function RootLayout({
